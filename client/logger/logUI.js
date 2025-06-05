@@ -1,3 +1,5 @@
+// This is a standalone script running purely the log in a new terminal to keep a clean operating environment.
+
 import chalk from 'chalk';
 import blessed from 'neo-blessed';
 import net from 'net';
@@ -36,22 +38,25 @@ screen.render();
 const server = net.createServer((socket) => {
   socket.on('data', (data) => {
     const input = data.toString().trim(),
-          split = input.split(',');
+          splitted = input.split(' ');
 
-    switch(split[0]) {
+    const type = splitted[0],
+          message = splitted.slice(1).join(' ')
 
-      case 'successLog':
-        logBox.log(chalk.green(split[1]));
+    switch(type) {
+
+      case 'success':
+        logBox.log(chalk.green(message));
         screen.render();
       break;
 
-      case 'errorLog':
-        logBox.log(chalk.red(split[1]));
+      case 'error':
+        logBox.log(chalk.red(message));
         screen.render();
       break;
 
-      case 'processLog':
-        logBox.log(chalk.yellow(split[1]));
+      case 'process':
+        logBox.log(chalk.yellow(message));
         screen.render();
       break;
 

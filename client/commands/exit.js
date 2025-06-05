@@ -9,8 +9,10 @@ class Exit extends CommandBase {
 
     async run() {
         console.log('👋 Exiting program. Goodbye!');
-        this.client.tcp.write('exit');
-        this.client.tcp.end();
+        if(this.client.UIIsOpen) {
+            this.client.tcp.write('exit');
+            this.client.tcp.end();
+        }
             setTimeout(() => {
                 console.clear();
                 process.exit(0);

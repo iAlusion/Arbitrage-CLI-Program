@@ -1,7 +1,8 @@
 import ccxt from 'ccxt';
 
 class ExchangeBase {
-    constructor(options) {
+    constructor(client, options) {
+        Object.defineProperty(this, 'client', { value: client });
 
         this.name = options.name;
 

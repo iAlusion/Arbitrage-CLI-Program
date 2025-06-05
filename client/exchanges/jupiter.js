@@ -1,8 +1,9 @@
 import Solana from '../chains/sol/solana.js';
  
 class Jupiter extends Solana {
-    constructor() {
-        super({
+    constructor(client) {
+        super(client,
+        {
             name: 'jupiter',
             requireCCXT: false
         });
@@ -10,9 +11,12 @@ class Jupiter extends Solana {
     }
 
     async getQuote(inputMint, outputMint, amount, slippage = 20) {
-        const url = `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippage}`;
-        const res = await fetch(url);
-        const data = await res.json()
+        const url = `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippage}`,
+              res = await fetch(url),
+              data = await res.json();
+
+              this.client.log('success', data);
+
         return data;
     }
 

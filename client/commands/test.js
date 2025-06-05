@@ -8,7 +8,7 @@ class Test extends CommandBase {
     }
 
     async run() {
-        this.client.sendCommand('successLog,successfully passed this');
+        this.client.log('success', 'Tested IPC connection woohoo');
 
         return undefined;
     }

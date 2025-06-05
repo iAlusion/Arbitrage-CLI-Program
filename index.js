@@ -7,25 +7,25 @@ import path from 'path';
 
 //Import arbi files
 import Client from './client/structures/client.js';
-
+import { infoText } from './client/structures/logger.js';
 
 //Prepare OS based directory path
 const filename = fileURLToPath(import.meta.url);
 const directory = path.dirname(filename);
 
 
-//Instantiate client with base path
-const client = new Client(directory)
+//Prepare client variable
+let client = new Client(directory);
 
 const allChoices = [
   { name: 'Setup(N/A)           - Setup to run once to install the program settings', value: 'setup'},
   { name: 'Start                - Starts the program', value: 'start' },
-  { name: 'Test', value: 'test'},
   { name: 'Update-setting(N/A)  - Updates a specified setting', value: 'update' },
+  { name: 'Test', value: 'test', isCmd: true},
   { name: 'Status(N/A)          - Gives a status report on the program runtime', value: 'status' },
   { name: 'Stop                 - Stops the program running', value: 'stop'},
   new inquirer.Separator(),
-  { name: 'Exit                 - Exits the program', value: 'exit' },
+  { name: 'Exit                 - Exits the program', value: 'exit' }
 ];
 
 async function mainMenu() {
@@ -34,14 +34,15 @@ async function mainMenu() {
   while (true) {
     console.clear();
 
-    client.UILogger.infoText();
+    infoText();
 
     const filteredChoices = allChoices.filter(choice => {
         if(choice instanceof inquirer.Separator) return true
         if(choice.value === 'setup' && client.hasSetup) return false;
         if(!client.hasSetup && choice.value !== 'setup' && choice.value !== 'exit') return false;
         if(choice.value === 'start' && client.hasStarted) return false;
-        if(choice.value === 'update' && client.hasStarted) return false;
+        if(choice.value === 'update' && (!client.hasSetup || client.hasStarted)) return false;
+        if(choice.isCmd && !client.hasStarted) return false;
 
       return true;
     });
